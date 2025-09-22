@@ -174,95 +174,18 @@ export default function StudentDashboard() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Quiz Section */}
+        {/* Game Hub Section */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="shadow-glow">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <Brain className="w-5 h-5 text-primary" />
-                  Math Challenge
-                </span>
-                {isQuizActive && (
-                  <div className="flex items-center gap-2 text-warning">
-                    <Clock className="w-4 h-4" />
-                    {timeLeft}s
-                  </div>
-                )}
-              </CardTitle>
-              <CardDescription>
-                {isQuizActive ? `Quiz Score: ${quizScore}` : "Test your skills with adaptive problems"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {currentProblem && (
-                <div className="text-center space-y-4">
-                  <div className="text-5xl font-bold text-primary">
-                    {currentProblem.problem} = ?
-                  </div>
-                  <div className="flex gap-3 max-w-md mx-auto">
-                    <Input
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Your answer"
-                      className="text-center text-xl"
-                      disabled={!isQuizActive && timeLeft === 0}
-                    />
-                    <Button 
-                      onClick={submitAnswer}
-                      className="gradient-success"
-                      disabled={!userAnswer}
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex gap-3 justify-center">
-                <Button 
-                  onClick={startQuiz}
-                  className="gradient-primary"
-                  disabled={isQuizActive}
-                >
-                  <Zap className="w-4 h-4 mr-2" />
-                  Start 30s Challenge
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={generateProblem}
-                  disabled={isQuizActive}
-                >
-                  New Problem
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Progress Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Daily Progress</CardTitle>
-              <CardDescription>Your learning journey this week</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span>Daily Goal</span>
-                  <span>72%</span>
-                </div>
-                <Progress value={72} className="h-3" />
-                <div className="grid grid-cols-7 gap-2 text-center text-xs">
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => (
-                    <div key={day} className={`p-2 rounded ${i < 4 ? 'bg-success text-success-foreground' : 'bg-muted'}`}>
-                      {day}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <GameHub 
+            playerLevel={progress.level}
+            onGameComplete={(gameId, score, xp) => {
+              setProgress(prev => ({
+                ...prev,
+                score: prev.score + score,
+                problemsSolved: prev.problemsSolved + 1
+              }));
+            }}
+          />
         </div>
 
         {/* Badges and Stats */}
